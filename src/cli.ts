@@ -829,8 +829,28 @@ async function setup() {
     message: "How would you like to configure context-mode?",
     options: [
       {
+        value: "opencode",
+        label: "OpenCode (recommended)",
+        hint: "~/.config/opencode/opencode.json",
+      },
+      {
+        value: "vscode",
+        label: "VS Code / Cursor / Continue",
+        hint: ".vscode/mcp.json",
+      },
+      {
+        value: "lm-studio",
+        label: "LM Studio",
+        hint: "LM Studio MCP settings",
+      },
+      {
+        value: "openwebui",
+        label: "Ollama + OpenWebUI",
+        hint: "OpenWebUI MCP proxy",
+      },
+      {
         value: "claude-code",
-        label: "Claude Code (recommended)",
+        label: "Claude Code",
         hint: "claude mcp add",
       },
       {
@@ -849,7 +869,92 @@ async function setup() {
 
   const serverPath = new URL("./server.js", import.meta.url).pathname;
 
-  if (installMethod === "claude-code") {
+  if (installMethod === "opencode") {
+    p.note(
+      JSON.stringify(
+        {
+          mcp: {
+            "context-mode": {
+              type: "stdio",
+              command: "npx",
+              args: ["-y", "context-mode"],
+            },
+          },
+        },
+        null,
+        2,
+      ),
+      "Add to ~/.config/opencode/opencode.json",
+    );
+  } else if (installMethod === "vscode") {
+    p.note(
+      JSON.stringify(
+        {
+          servers: {
+            "context-mode": {
+              type: "stdio",
+              command: "npx",
+              args: ["-y", "context-mode"],
+              env: { PROJECT_DIR: "${workspaceFolder}" },
+            },
+          },
+        },
+        null,
+        2,
+      ),
+      "Add to .vscode/mcp.json (VS Code) or ~/.cursor/mcp.json (Cursor)",
+    );
+  } else if (installMethod === "lm-studio") {
+    p.note(
+      [
+        "In LM Studio → Developer → MCP Servers → Add Server:",
+        "",
+        "  Name:    context-mode",
+        "  Command: npx",
+        "  Args:    -y context-mode",
+        "",
+        "Or edit ~/.lmstudio/mcp.json:",
+        JSON.stringify(
+          {
+            mcpServers: {
+              "context-mode": {
+                command: "npx",
+                args: ["-y", "context-mode"],
+              },
+            },
+          },
+          null,
+          2,
+        ),
+      ].join("\n"),
+      "LM Studio Configuration",
+    );
+  } else if (installMethod === "openwebui") {
+    p.note(
+      [
+        "In OpenWebUI → Admin Panel → Settings → Tools → MCP Servers:",
+        "",
+        "  Name:    context-mode",
+        "  Command: npx",
+        "  Args:    -y context-mode",
+        "",
+        "Or edit config/mcp.json in your OpenWebUI data directory:",
+        JSON.stringify(
+          {
+            mcpServers: {
+              "context-mode": {
+                command: "npx",
+                args: ["-y", "context-mode"],
+              },
+            },
+          },
+          null,
+          2,
+        ),
+      ].join("\n"),
+      "Ollama + OpenWebUI Configuration",
+    );
+  } else if (installMethod === "claude-code") {
     s.start("Adding to Claude Code");
     try {
       execSync(
@@ -870,15 +975,15 @@ async function setup() {
         {
           mcpServers: {
             "context-mode": {
-              command: "node",
-              args: [serverPath],
+              command: "npx",
+              args: ["-y", "context-mode"],
             },
           },
         },
         null,
         2,
       ),
-      "Add to your .mcp.json or Claude Code settings",
+      "Add to your .mcp.json or MCP client settings",
     );
   }
 
@@ -888,5 +993,6 @@ async function setup() {
       color.dim(available.length + " languages ready."),
   );
 }
+
 
 
