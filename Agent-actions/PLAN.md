@@ -5,6 +5,7 @@
 This document records the plan to transform `context-mode` from a Claude Code-specific MCP plugin into a platform-agnostic MCP server that works with:
 
 - **OpenCode** (primary target) — open-source terminal AI coding assistant with native MCP support
+- **ZeroClaw** — Rust-based terminal AI coding assistant (OpenClaw alternative) with native MCP support
 - **VS Code** — via GitHub Copilot Chat MCP integration or Cursor
 - **LM Studio** — local inference runner with MCP support
 - **Ollama + OpenWebUI** — local inference via OpenWebUI's MCP proxy
@@ -34,7 +35,7 @@ The original codebase was tightly coupled to Claude Code via:
 | File | Change |
 |------|--------|
 | `src/server.ts` | Replace `CLAUDE_PROJECT_DIR` with `PROJECT_DIR ?? CLAUDE_PROJECT_DIR` (backward-compatible) |
-| `src/cli.ts` | Add OpenCode, VS Code, LM Studio, Ollama setup options to the `setup` command |
+| `src/cli.ts` | Add OpenCode, ZeroClaw, VS Code, LM Studio, Ollama setup options to the `setup` command |
 
 ### 2. Runtime Bootstrap (`start.mjs`)
 
@@ -48,7 +49,7 @@ The original codebase was tightly coupled to Claude Code via:
 ### 4. Package Metadata (`package.json`)
 
 - **Updated**: Description to mention all supported platforms
-- **Updated**: Keywords — removed `claude`, `claude-code`; added `opencode`, `vscode`, `lm-studio`, `ollama`, `openwebui`
+- **Updated**: Keywords — removed `claude`, `claude-code`; added `opencode`, `zeroclaw`, `vscode`, `lm-studio`, `ollama`, `openwebui`
 
 ### 5. Hooks (`hooks/`)
 
@@ -80,6 +81,7 @@ The security module reads permission policies from `settings.json` files. On non
 See the other files in this folder:
 
 - [`OPENCODE-SETUP.md`](./OPENCODE-SETUP.md)
+- [`ZEROCLAW-SETUP.md`](./ZEROCLAW-SETUP.md)
 - [`VSCODE-SETUP.md`](./VSCODE-SETUP.md)
 - [`LM-STUDIO-SETUP.md`](./LM-STUDIO-SETUP.md)
 - [`OPENWEBUI-SETUP.md`](./OPENWEBUI-SETUP.md)

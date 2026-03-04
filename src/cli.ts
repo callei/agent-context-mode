@@ -834,6 +834,11 @@ async function setup() {
         hint: "~/.config/opencode/opencode.json",
       },
       {
+        value: "zeroclaw",
+        label: "ZeroClaw",
+        hint: "~/.config/zeroclaw/config.toml",
+      },
+      {
         value: "vscode",
         label: "VS Code / Cursor / Continue",
         hint: ".vscode/mcp.json",
@@ -885,6 +890,22 @@ async function setup() {
         2,
       ),
       "Add to ~/.config/opencode/opencode.json",
+    );
+  } else if (installMethod === "zeroclaw") {
+    p.note(
+      [
+        "Add to ~/.config/zeroclaw/config.toml:",
+        "",
+        '[mcp.servers.context-mode]',
+        'command = "npx"',
+        'args = ["-y", "context-mode"]',
+        "",
+        "To set a project directory (optional):",
+        "",
+        '[mcp.servers.context-mode.env]',
+        'PROJECT_DIR = "/path/to/your/project"',
+      ].join("\n"),
+      "Add to ~/.config/zeroclaw/config.toml",
     );
   } else if (installMethod === "vscode") {
     p.note(
